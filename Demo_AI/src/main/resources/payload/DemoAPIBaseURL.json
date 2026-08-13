@@ -1,0 +1,9 @@
+{
+  "QA": {
+    "demo": {
+      "getUsers":   "https://reqres.in/api/users",
+      "createUser": "https://reqres.in/api/users",
+      "getUser":    "https://reqres.in/api/users/2"
+    }
+  }
+}

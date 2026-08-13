@@ -1,0 +1,11 @@
+# ============================================================
+# ADD THESE LINES to your existing .env file
+# ============================================================
+
+# secretKey — moved from config.properties to here (never commit .env)
+# Choose any string as your demo secret key
+secretKey=your_own_demo_secret_key_here
+
+# Demo app credentials — saucedemo.com (publicly documented, safe to store)
+DEMO_USERNAME=standard_user
+DEMO_PASSWORD=secret_sauce

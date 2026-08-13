@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite thread-count="1" data-provider-thread-count="1" name="DEMO Regression Suite">
+  <parameter name="env" value="DEMO_QA"/>
+  <listeners>
+    <listener class-name="framework.listeners.CustomTestListener"/>
+    <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
+  </listeners>
+  <test thread-count="1" name="DEMO Web QA">
+    <parameter name="browser" value="chrome"/>
+    <parameter name="env" value="DEMO_QA"/>
+    <parameter name="testCaseID" value="TC002"/>
+    <classes>
+      <class name="tests.web.DemoWebScripts">
+        <methods>
+          <include name="TC001_DEMO_Successful_Login"/>
+          <include name="TC002_DEMO_Successful_Login_Logout"/>
+        </methods>
+      </class> <!-- tests.web.DemoWebScripts -->
+    </classes>
+  </test> <!-- DEMO Web QA -->
+</suite> <!-- DEMO Regression Suite -->

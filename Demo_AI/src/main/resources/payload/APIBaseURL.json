@@ -1,0 +1,12 @@
+{
+  "QA": {
+    "s3": {
+      "s3Upload": "https://sfsdfonaws.com/qa"
+    }
+  },
+  "TEST": {
+    "s3": {
+      "s3Upload": "https://usffsfsonaws.com/test"
+    }
+  }
+}

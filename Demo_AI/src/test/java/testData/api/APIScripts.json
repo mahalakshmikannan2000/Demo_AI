@@ -1,0 +1,22 @@
+{
+  "API_TEST": [
+    {
+      "automationId": "TC01_GETBearerToken",
+      "module": "s3",
+      "function": "s3Upload",
+      "endpoint": "/api/utility/bearer",
+      "params.query.ExpiryMinutes": "100",
+      "expectedStatus": "200"
+    }
+  ],
+  "API_QA": [
+    {
+      "automationId": "TC01_GETBearerToken",
+      "module": "s3",
+      "function": "s3Upload",
+      "endpoint": "/api/utility/bearer",
+      "params.query.ExpiryMinutes": "100",
+      "expectedStatus": "200"
+    }
+  ]
+}

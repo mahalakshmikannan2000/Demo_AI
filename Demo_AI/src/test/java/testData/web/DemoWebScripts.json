@@ -1,0 +1,18 @@
+{
+  "DEMO_QA": [
+    {
+      "automationId": "TC001_DEMO_Successful_Login"
+    },
+    {
+      "automationId": "TC002_DEMO_Successful_Login_Logout"
+    }
+  ],
+  "DEMO_TEST": [
+    {
+      "automationId": "TC001_DEMO_Successful_Login"
+    },
+    {
+      "automationId": "TC002_DEMO_Successful_Login_Logout"
+    }
+  ]
+}

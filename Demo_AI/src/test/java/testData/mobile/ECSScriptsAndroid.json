@@ -1,0 +1,12 @@
+{
+  "ECS_QA": [
+    {
+      "automationId": "TC01_Android_logInToECSWithValidID"
+    }
+  ],
+  "ECS_TEST": [
+    {
+      "automationId": "TC01_Android_logInToECSWithValidID"
+    }
+  ]
+}
