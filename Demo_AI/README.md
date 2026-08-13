@@ -1,6 +1,6 @@
-# CSP Login Demo — UTAF_CFC Framework Showcase
+#Demo 
 
-A trimmed-down extract of the full `UTAF_CFC` automation framework, built to demo the
+A trimmed-down extract of the full automation framework, built to demo the
 **framework capabilities** to another client team without exposing the full application
 suite. It contains one working test case per platform, but every core framework feature is
 fully wired and functional:
@@ -14,26 +14,24 @@ fully wired and functional:
 | Dynamic TestNG XML generation    | `framework.utils.TestNGXMLGenerator` (reads `src/main/resources/TestNGXML.xlsx`) |
 | JSON-driven test data            | `framework.utils.DataProvider` + `src/test/java/testData/**/*.json` |
 | Retry / listeners                | `framework.listeners.RetryAnalyzer`, `CustomTestListener` |
-| CI/CD                            | `azure-pipelines-*.yml` (CSP web, ECS Android, ECS iOS) |
 
-## Included test cases
+## Sample Included test cases
 
-| # | Test | Class | Platform |
-|---|------|-------|----------|
-| 1 | `TC001_CSP_Successful_login` | `tests.web.CSPScripts` | Web (Chrome/Edge) |
-| 2 | `TC01_Android_logInToECSWithValidID` | `tests.mobile.ECSScriptsAndroid` | Android (BrowserStack App Automate) |
-| 3 | `TC01_IOS_LoginToECSWithValidID` | `tests.mobile.ECSScriptsIOS` | iOS (BrowserStack App Automate) |
-| 4 | `TC01_GETBearerToken` | `tests.api.APIScripts` | REST API (Rest Assured) |
+| # | Test | Class                           | Platform |
+|---|-----|---------------------------------|----------|
+| 1 | `TC001_DEMO_Successful_Login` | `tests.web.DEMOWebScripts`      | Web (Chrome/Edge) |
+| 2 | `TC001_IOS_AppLaunch` | `tests.mobile.DEMOMobileScrips` | Android (BrowserStack App Automate) |
+| 3 | `TC001_Android_AppLaunch` | `tests.mobile.DEMOMobileScrips`    | iOS (BrowserStack App Automate) |
+| 4 | `DemoApiScripts` | `tests.api.DemoApiScripts`          | REST API (Rest Assured) |
 
 ## Project layout
 
 ```
 src/main/java/framework/   core framework (config, base, database, listeners, utils, api)
-src/main/java/app/         page objects (app.web.csp, app.mobile.ECS, app.api.Platform)
+src/main/java/app/         page objects (app.web, app.mobile, app.api)
 src/main/resources/        properties, logback.xml, TestNGXML.xlsx (auto-generated), payload
 src/test/java/tests/       TestNG test classes (web, mobile, api)
 src/test/java/testData/    JSON test data consumed by DataProvider
-azure-pipelines-*.yml      Azure DevOps pipelines (CSP web, ECS Android, ECS iOS)
 generate-allure-*.bat      Allure report generation scripts
 ```
 
@@ -57,14 +55,11 @@ and executes it — this is the "dynamic TestNG XML generation" feature.
 Run any of the 4 demo suites with Maven, switching `appName`/`env` per platform:
 
 ```bash
-# CSP web login (Chrome)
-mvn test-compile exec:java -DappName=CSP_Regression -Denv=CSP_QA
+# web login (Chrome)
+mvn test-compile exec:java -DappName=CSP_Regression -Denv=DEMO_QA
 
 # ECS Android login (BrowserStack)
-mvn test-compile exec:java -DappName=ECS_Android -Denv=ECS_QA
-
-# ECS iOS login (BrowserStack)
-mvn test-compile exec:java -DappName=ECS_IOS -Denv=ECS_QA
+mvn test-compile exec:java -DappName=DEMO_Android -Denv=DEMO_QA
 
 # Platform API - bearer token auth
 mvn test-compile exec:java -DappName=API_Regression -Denv=API_TEST
@@ -84,22 +79,13 @@ Any property in `config.properties` can be overridden at the command line with `
   `generate-allure-history-report.bat` (trend/history view), depending on the
   `singleAllure` flag in `config.properties`.
 
-## CI/CD
-
-Three Azure DevOps pipelines are included, all invoking the same
-`exec:java -Dexec.mainClass=framework.utils.TestNGXMLGenerator` entry point used locally:
-
-- `azure-pipelines-smoke-CSP.yml` — CSP web login, with Allure history/single-file handling
-  and Extent/Allure artifact publishing.
-- `azure-pipelines-android-regression-ECS.yml` — ECS Android login on BrowserStack.
-- `azure-pipelines-ios-regression-ECS.yml` — ECS iOS login on BrowserStack.
 
 ## Notes on trimming
 
-This project is intentionally a **subset** of the full `UTAF_CFC` framework:
+This project is intentionally a **subset** of the full framework:
 
 - Only the page objects/methods needed by the 4 demo test cases are included (e.g.
-  `CSPLoginPage` instead of ~35 CSP pages, `APIClient` trimmed to the ~6 methods the token
+  `DEMOLoginPage` instead of ~35 CSP pages, `APIClient` trimmed to the ~6 methods the token
   test needs).
 - Applicant/DB-result-collection, Excel/email dashboards, and Azure Test Plan result
   sync were removed from `CustomTestListener`/`TestBase` — they were specific to the
