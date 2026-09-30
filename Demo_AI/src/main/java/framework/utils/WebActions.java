@@ -106,21 +106,39 @@ public class WebActions extends TestBase {
         }
     }
 
+    public static void waitUntilElementClickable(WebElement ele) {
+        try {
+           new WebDriverWait(DriverFactory.getDriver(), Duration.ofSeconds(WAIT_10_SEC))
+                    .until(ExpectedConditions.elementToBeClickable(ele));
+        } catch (Exception e) {
+            Assert.assertTrue(false,"Element is Not Clickable");
+            }
+        }
     /*
      * Method Description : Clicks on the element after scrolling into view (JS fallback on failure)
      * Input Parameter(s) if any : WebElement element
      * Output Parameter(s) if any : void
      */
+//    public static void clickElement(WebElement element) {
+//        try {
+//            JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
+//           WebElement actualElement =  waitUntilElementClickable(element,"button");
+//            scrollIntoElement(actualElement);
+//            try {
+//                actualElement.click();
+//            } catch (Exception e) {
+//                js.executeScript("arguments[0].click();", actualElement);
+//            }
+//        } catch (Exception e) {
+//            logger.error("Exception While click on Element {}", e.getMessage(), e);
+//        }
+//    }
+
     public static void clickElement(WebElement element) {
         try {
-            JavascriptExecutor js = (JavascriptExecutor) DriverFactory.getDriver();
-           WebElement actualElement =  waitUntilElementClickable(element,"button");
-            scrollIntoElement(actualElement);
-            try {
-                actualElement.click();
-            } catch (Exception e) {
-                js.executeScript("arguments[0].click();", actualElement);
-            }
+            waitUntilElementClickable(element);
+            scrollIntoElement(element);
+            element.click();
         } catch (Exception e) {
             logger.error("Exception While click on Element {}", e.getMessage(), e);
         }
@@ -131,16 +149,35 @@ public class WebActions extends TestBase {
      * Input Parameter(s) if any : WebElement element, String text
      * Output Parameter(s) if any : void
      */
+//    public static void enterTextBySendKeys(WebElement element, String text) {
+//       WebElement activeElement =  isElementPresent(element,"input");
+////       isElementPresent(element,WAIT_5_SEC);
+//       if(activeElement!=null){
+//           scrollIntoElement(activeElement);
+//           activeElement.clear();
+//           activeElement.sendKeys(text);
+//       }else{
+//           Assert.assertTrue(false,"Value is Not entered on Field");
+//       }
+//    }
+
+    /*
+     * Method Description : Enters text into an element using sendKeys
+     * Input Parameter(s) if any : WebElement element, String text
+     * Output Parameter(s) if any : void
+     */
     public static void enterTextBySendKeys(WebElement element, String text) {
-       WebElement activeElement =  isElementPresent(element,"input");
-       if(activeElement!=null){
-           scrollIntoElement(activeElement);
-           activeElement.clear();
-           activeElement.sendKeys(text);
-       }else{
-           Assert.assertTrue(false,"Value is Not entered on Field");
-       }
+        boolean isPresent =  isElementPresent(element,WAIT_5_SEC);
+        if(isPresent){
+            scrollIntoElement(element);
+            element.clear();
+            element.sendKeys(text);
+        }else{
+            Assert.assertTrue(false,"Value is Not entered on Field");
+        }
     }
+
+
 
     /*
      * Method Description : Returns the visible text of an element, waiting until it is non-empty

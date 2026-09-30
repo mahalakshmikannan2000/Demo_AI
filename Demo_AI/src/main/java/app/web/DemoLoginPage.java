@@ -19,7 +19,7 @@ public class DemoLoginPage extends WebActions {
 
     public WebDriver driver;
 
-   @FindBy(id = "user-name")
+   @FindBy(id = "user-name_broken")
     private WebElement inputUsername;
 
     @FindBy(id = "password")
