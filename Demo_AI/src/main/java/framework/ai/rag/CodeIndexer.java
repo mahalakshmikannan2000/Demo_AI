@@ -1,8 +1,11 @@
 package framework.ai.rag;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.github.cdimascio.dotenv.Dotenv;
+import io.restassured.config.HttpClientConfig;
+import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.slf4j.Logger;
@@ -14,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -26,6 +30,12 @@ public class CodeIndexer {
     private static String chromaBaseURL;
     private static String nomicEmbedTextModel;
     private static String ollamaBaseUrl;
+    private static final int LARGE_FILE_CHARS = 8000;
+
+    private static final RestAssuredConfig OLLAMA_CONFIG = RestAssuredConfig.config()
+                    .httpClient(HttpClientConfig.httpClientConfig()
+                    .setParam("http.connection.timeout", 10_000)   // 10 s: fail fast if Ollama is down
+                    .setParam("http.socket.timeout", 180_000));    // 3 min: allow model cold start
 
 
     static {
@@ -60,7 +70,7 @@ public class CodeIndexer {
         return id;
     }
 
-public static void main(String[] args){
+public static void main(String[] args) throws IOException {
 
     String id =  getorCreateCollection();
     logger.info("Collection ID: " + id);
@@ -74,8 +84,26 @@ public static void main(String[] args){
         logger.info("{} | {} | {}", file.id(), file.path(), file.source());
     }
     logger.info("Total .java files found: {}", allFiles.size());
+    CodeFile loginPage = allFiles.stream().filter(f -> f.id().equals("app.web.DemoLoginPage")).findFirst().orElseThrow(() -> new IllegalStateException("DemoLoginPage not found in scan"));
+    String code = Files.readString(loginPage.path());
 
+    logger.info("Read {} chars from {}", code.length(), loginPage.id());
+
+    long start = System.currentTimeMillis();
+    List<Double> vector = embed(loginPage.id(), code);
+    long timeTaken = System.currentTimeMillis() - start;
+
+
+    if (vector == null) {
+        logger.error("No vector returned — check Ollama is running");
+        return;
     }
+    logger.info("Vector size: {}", vector.size());
+    logger.info("First 5: {}", vector.subList(0, 5));
+    logger.info("Embed time: {} ms", timeTaken);
+
+
+}
 
     public static List<CodeFile> scanJavaFiles(Path root, String source) {
         List<CodeFile> codeFiles = new ArrayList<>();
@@ -111,6 +139,36 @@ public static void main(String[] args){
         }
 
         return codeFiles;
+    }
+
+    private static List<Double> embed(String id,String text){
+
+        if(text.length() >=LARGE_FILE_CHARS){
+            logger.warn("[RAG] {} is large ({} chars) — may be truncated", id, text.length());
+        }
+
+        JsonObject body = new JsonObject();
+        body.addProperty("model",nomicEmbedTextModel);
+        body.addProperty("input",text);
+
+
+        Response response = given().config(OLLAMA_CONFIG).contentType(ContentType.JSON).body(body.toString()).when().post(ollamaBaseUrl+"/api/embed");
+
+        if (response.getStatusCode() < 200 || response.getStatusCode() >= 300) {
+            logger.error("Embedding failed for {}. Status Code: {}", id, response.getStatusCode());
+            logger.error("Response Body: {}", response.asString());
+            return null;
+        }
+
+        JsonArray embeddings = JsonParser.parseString(response.asString()).getAsJsonObject().getAsJsonArray("embeddings");
+        System.out.println(embeddings);
+        JsonArray vectorJson = embeddings.get(0).getAsJsonArray();
+        List<Double> vector = new ArrayList<>(vectorJson.size());
+        for (int i = 0; i < vectorJson.size(); i++) {
+            vector.add(vectorJson.get(i).getAsDouble());
+        }
+        return vector;
+
     }
 
 }
