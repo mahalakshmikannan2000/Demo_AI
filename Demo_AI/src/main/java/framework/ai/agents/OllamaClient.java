@@ -34,7 +34,7 @@ public class OllamaClient {
         String result = null;
         try {
             List<ChatMessage> chatMessage = new ArrayList<>();
-            OllamaChatModel modelbuild = OllamaChatModel.builder().baseUrl(ollamaBaseUrl).modelName(ollamaModel).timeout(Duration.ofSeconds(5)).build();
+            OllamaChatModel modelbuild = OllamaChatModel.builder().baseUrl(ollamaBaseUrl).modelName(ollamaModel).timeout(Duration.ofSeconds(180)).build();
 
             for (Map<String, String> message : messages) {
                 String role = message.get("role");
