@@ -157,7 +157,7 @@ public class FailureContext {
     }
 
     public String toJson(){
-        return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+        return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(this);
     }
 
     public static void main(String[] args){

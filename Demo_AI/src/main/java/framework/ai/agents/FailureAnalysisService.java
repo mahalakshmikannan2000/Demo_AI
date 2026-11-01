@@ -57,6 +57,14 @@ private static final int MAX_CODE_CHARS = 6000;
             systemMessage.put("role", "system");
             systemMessage.put("content", FAILURE_ANALYSIS_PROMPT);
 
+            Map<String, String> example1Input = new HashMap<>();
+            example1Input.put("role", "user");
+            example1Input.put("content", EXAMPLE_INPUT_1);
+
+            Map<String, String> example1Output = new HashMap<>();
+            example1Output.put("role", "assistant");
+            example1Output.put("content", EXAMPLE_OUTPUT_1);
+
             Map<String, String> userInputExp = new HashMap<>();
             userInputExp.put("role", "user");
             userInputExp.put("content", EXAMPLE_INPUT_2);
@@ -70,6 +78,8 @@ private static final int MAX_CODE_CHARS = 6000;
             actualMessage.put("content", userContent);
 
             listOfMap.add(systemMessage);
+            listOfMap.add(example1Input);
+            listOfMap.add(example1Output);
             listOfMap.add(userInputExp);
             listOfMap.add(userOutputExp);
             listOfMap.add(actualMessage);
